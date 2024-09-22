@@ -13,6 +13,7 @@ type Config struct {
 	Port              Port
 	MySQL             MySQL
 	JWT               JWTConfig
+	ClientURL         ClientURL
 }
 
 type Port struct {
@@ -30,6 +31,10 @@ type MySQL struct {
 type JWTConfig struct {
 	JwtSecretKey  string        `env:"JWT_SECRET_KEY"`
 	TokenDuration time.Duration `env:"JWT_DURATION,default=30m"`
+}
+
+type ClientURL struct {
+	Consumer string `env:"CLIENT_URL_CONSUMER"`
 }
 
 func NewConfig(env string) (*Config, error) {

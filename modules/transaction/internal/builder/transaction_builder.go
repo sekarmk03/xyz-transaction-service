@@ -2,6 +2,7 @@ package builder
 
 import (
 	"xyz-transaction-service/common/config"
+	"xyz-transaction-service/modules/transaction/client"
 	"xyz-transaction-service/modules/transaction/internal/handler"
 	"xyz-transaction-service/modules/transaction/internal/repository"
 	"xyz-transaction-service/modules/transaction/service"
@@ -13,6 +14,7 @@ import (
 func BuildTransactionHandler(cfg config.Config, db *gorm.DB, grpcConn *grpc.ClientConn) *handler.TransactionHandler {
 	transactionRepository := repository.NewTransactionRepository(db)
 	transactionSvc := service.NewTransactionService(cfg, transactionRepository)
+	consumerLimitSvc := client.BuildConsumerLimitServiceClient(cfg.ClientURL.Consumer)
 
-	return handler.NewTransactionHandler(cfg, transactionSvc)
+	return handler.NewTransactionHandler(cfg, transactionSvc, consumerLimitSvc)
 }
