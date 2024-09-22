@@ -25,8 +25,8 @@ message TransactionListResponse {
     repeated Transaction data = 3;
 }
 
-message TransactionIdRequest {
-    uint64 id = 1;
+message TransactionConsumerIdRequest {
+    uint64 consumer_id = 1;
 }
 
 message TransactionContractNumberRequest {
@@ -41,7 +41,7 @@ message TransactionResponse {
 
 service TransactionService {
     rpc GetAllTransactions(google.protobuf.Empty) returns (TransactionListResponse);
-    rpc GetTransactionsByConsumerId(TransactionIdRequest) returns (TransactionListResponse);
+    rpc GetTransactionsByConsumerId(TransactionConsumerIdRequest) returns (TransactionListResponse);
     rpc GetTransactionByContractNumber(TransactionContractNumberRequest) returns (TransactionResponse);
     rpc CreateTransaction(Transaction) returns (TransactionResponse);
 }

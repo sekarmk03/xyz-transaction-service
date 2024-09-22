@@ -31,7 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TransactionServiceClient interface {
 	GetAllTransactions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TransactionListResponse, error)
-	GetTransactionsByConsumerId(ctx context.Context, in *TransactionIdRequest, opts ...grpc.CallOption) (*TransactionListResponse, error)
+	GetTransactionsByConsumerId(ctx context.Context, in *TransactionConsumerIdRequest, opts ...grpc.CallOption) (*TransactionListResponse, error)
 	GetTransactionByContractNumber(ctx context.Context, in *TransactionContractNumberRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
 	CreateTransaction(ctx context.Context, in *Transaction, opts ...grpc.CallOption) (*TransactionResponse, error)
 }
@@ -53,7 +53,7 @@ func (c *transactionServiceClient) GetAllTransactions(ctx context.Context, in *e
 	return out, nil
 }
 
-func (c *transactionServiceClient) GetTransactionsByConsumerId(ctx context.Context, in *TransactionIdRequest, opts ...grpc.CallOption) (*TransactionListResponse, error) {
+func (c *transactionServiceClient) GetTransactionsByConsumerId(ctx context.Context, in *TransactionConsumerIdRequest, opts ...grpc.CallOption) (*TransactionListResponse, error) {
 	out := new(TransactionListResponse)
 	err := c.cc.Invoke(ctx, TransactionService_GetTransactionsByConsumerId_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -85,7 +85,7 @@ func (c *transactionServiceClient) CreateTransaction(ctx context.Context, in *Tr
 // for forward compatibility
 type TransactionServiceServer interface {
 	GetAllTransactions(context.Context, *emptypb.Empty) (*TransactionListResponse, error)
-	GetTransactionsByConsumerId(context.Context, *TransactionIdRequest) (*TransactionListResponse, error)
+	GetTransactionsByConsumerId(context.Context, *TransactionConsumerIdRequest) (*TransactionListResponse, error)
 	GetTransactionByContractNumber(context.Context, *TransactionContractNumberRequest) (*TransactionResponse, error)
 	CreateTransaction(context.Context, *Transaction) (*TransactionResponse, error)
 	mustEmbedUnimplementedTransactionServiceServer()
@@ -98,7 +98,7 @@ type UnimplementedTransactionServiceServer struct {
 func (UnimplementedTransactionServiceServer) GetAllTransactions(context.Context, *emptypb.Empty) (*TransactionListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllTransactions not implemented")
 }
-func (UnimplementedTransactionServiceServer) GetTransactionsByConsumerId(context.Context, *TransactionIdRequest) (*TransactionListResponse, error) {
+func (UnimplementedTransactionServiceServer) GetTransactionsByConsumerId(context.Context, *TransactionConsumerIdRequest) (*TransactionListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionsByConsumerId not implemented")
 }
 func (UnimplementedTransactionServiceServer) GetTransactionByContractNumber(context.Context, *TransactionContractNumberRequest) (*TransactionResponse, error) {
@@ -139,7 +139,7 @@ func _TransactionService_GetAllTransactions_Handler(srv interface{}, ctx context
 }
 
 func _TransactionService_GetTransactionsByConsumerId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TransactionIdRequest)
+	in := new(TransactionConsumerIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -151,7 +151,7 @@ func _TransactionService_GetTransactionsByConsumerId_Handler(srv interface{}, ct
 		FullMethod: TransactionService_GetTransactionsByConsumerId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TransactionServiceServer).GetTransactionsByConsumerId(ctx, req.(*TransactionIdRequest))
+		return srv.(TransactionServiceServer).GetTransactionsByConsumerId(ctx, req.(*TransactionConsumerIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
