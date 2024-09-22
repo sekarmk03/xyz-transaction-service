@@ -1,0 +1,13 @@
+ENV = development
+SERVICE_NAME = xzy-transaction-service
+
+PORT_GRPC = 50052
+
+JWT_SECRET_KEY =
+JWT_DURATION = 300m
+
+MYSQL_HOST = 127.0.0.1
+MYSQL_PORT = 3306
+MYSQL_USER =
+MYSQL_PASSWORD =
+MYSQL_NAME = xyz_transaction_management
