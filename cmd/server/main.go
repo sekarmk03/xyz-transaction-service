@@ -8,6 +8,8 @@ import (
 	"xyz-transaction-service/common/mysql"
 	"xyz-transaction-service/server"
 
+	transactionModule "xyz-transaction-service/modules/transaction"
+
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 )
@@ -42,7 +44,7 @@ func checkError(err error) {
 }
 
 func registerGrpcHandlers(server *grpc.Server, cfg config.Config, db *gorm.DB, grpcConn *grpc.ClientConn) {
-	// consumerModule.InitGrpc(server, cfg, db, grpcConn)
+	transactionModule.InitGrpc(server, cfg, db, grpcConn)
 }
 
 func splash(cfg *config.Config) {
