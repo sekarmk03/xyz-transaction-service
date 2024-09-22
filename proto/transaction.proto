@@ -29,6 +29,10 @@ message TransactionIdRequest {
     uint64 id = 1;
 }
 
+message TransactionContractNumberRequest {
+    string contract_number = 1;
+}
+
 message TransactionResponse {
     uint32 code = 1;
     string message = 2;
@@ -38,6 +42,6 @@ message TransactionResponse {
 service TransactionService {
     rpc GetAllTransactions(google.protobuf.Empty) returns (TransactionListResponse);
     rpc GetTransactionsByConsumerId(TransactionIdRequest) returns (TransactionListResponse);
-    rpc GetTransactionById(TransactionIdRequest) returns (TransactionResponse);
+    rpc GetTransactionByContractNumber(TransactionContractNumberRequest) returns (TransactionResponse);
     rpc CreateTransaction(Transaction) returns (TransactionResponse);
 }

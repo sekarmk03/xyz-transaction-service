@@ -20,10 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	TransactionService_GetAllTransactions_FullMethodName          = "/xyz_grpc.TransactionService/GetAllTransactions"
-	TransactionService_GetTransactionsByConsumerId_FullMethodName = "/xyz_grpc.TransactionService/GetTransactionsByConsumerId"
-	TransactionService_GetTransactionById_FullMethodName          = "/xyz_grpc.TransactionService/GetTransactionById"
-	TransactionService_CreateTransaction_FullMethodName           = "/xyz_grpc.TransactionService/CreateTransaction"
+	TransactionService_GetAllTransactions_FullMethodName             = "/xyz_grpc.TransactionService/GetAllTransactions"
+	TransactionService_GetTransactionsByConsumerId_FullMethodName    = "/xyz_grpc.TransactionService/GetTransactionsByConsumerId"
+	TransactionService_GetTransactionByContractNumber_FullMethodName = "/xyz_grpc.TransactionService/GetTransactionByContractNumber"
+	TransactionService_CreateTransaction_FullMethodName              = "/xyz_grpc.TransactionService/CreateTransaction"
 )
 
 // TransactionServiceClient is the client API for TransactionService service.
@@ -32,7 +32,7 @@ const (
 type TransactionServiceClient interface {
 	GetAllTransactions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TransactionListResponse, error)
 	GetTransactionsByConsumerId(ctx context.Context, in *TransactionIdRequest, opts ...grpc.CallOption) (*TransactionListResponse, error)
-	GetTransactionById(ctx context.Context, in *TransactionIdRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
+	GetTransactionByContractNumber(ctx context.Context, in *TransactionContractNumberRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
 	CreateTransaction(ctx context.Context, in *Transaction, opts ...grpc.CallOption) (*TransactionResponse, error)
 }
 
@@ -62,9 +62,9 @@ func (c *transactionServiceClient) GetTransactionsByConsumerId(ctx context.Conte
 	return out, nil
 }
 
-func (c *transactionServiceClient) GetTransactionById(ctx context.Context, in *TransactionIdRequest, opts ...grpc.CallOption) (*TransactionResponse, error) {
+func (c *transactionServiceClient) GetTransactionByContractNumber(ctx context.Context, in *TransactionContractNumberRequest, opts ...grpc.CallOption) (*TransactionResponse, error) {
 	out := new(TransactionResponse)
-	err := c.cc.Invoke(ctx, TransactionService_GetTransactionById_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, TransactionService_GetTransactionByContractNumber_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +86,7 @@ func (c *transactionServiceClient) CreateTransaction(ctx context.Context, in *Tr
 type TransactionServiceServer interface {
 	GetAllTransactions(context.Context, *emptypb.Empty) (*TransactionListResponse, error)
 	GetTransactionsByConsumerId(context.Context, *TransactionIdRequest) (*TransactionListResponse, error)
-	GetTransactionById(context.Context, *TransactionIdRequest) (*TransactionResponse, error)
+	GetTransactionByContractNumber(context.Context, *TransactionContractNumberRequest) (*TransactionResponse, error)
 	CreateTransaction(context.Context, *Transaction) (*TransactionResponse, error)
 	mustEmbedUnimplementedTransactionServiceServer()
 }
@@ -101,8 +101,8 @@ func (UnimplementedTransactionServiceServer) GetAllTransactions(context.Context,
 func (UnimplementedTransactionServiceServer) GetTransactionsByConsumerId(context.Context, *TransactionIdRequest) (*TransactionListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionsByConsumerId not implemented")
 }
-func (UnimplementedTransactionServiceServer) GetTransactionById(context.Context, *TransactionIdRequest) (*TransactionResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionById not implemented")
+func (UnimplementedTransactionServiceServer) GetTransactionByContractNumber(context.Context, *TransactionContractNumberRequest) (*TransactionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTransactionByContractNumber not implemented")
 }
 func (UnimplementedTransactionServiceServer) CreateTransaction(context.Context, *Transaction) (*TransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTransaction not implemented")
@@ -156,20 +156,20 @@ func _TransactionService_GetTransactionsByConsumerId_Handler(srv interface{}, ct
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TransactionService_GetTransactionById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TransactionIdRequest)
+func _TransactionService_GetTransactionByContractNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransactionContractNumberRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TransactionServiceServer).GetTransactionById(ctx, in)
+		return srv.(TransactionServiceServer).GetTransactionByContractNumber(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TransactionService_GetTransactionById_FullMethodName,
+		FullMethod: TransactionService_GetTransactionByContractNumber_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TransactionServiceServer).GetTransactionById(ctx, req.(*TransactionIdRequest))
+		return srv.(TransactionServiceServer).GetTransactionByContractNumber(ctx, req.(*TransactionContractNumberRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -208,8 +208,8 @@ var TransactionService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TransactionService_GetTransactionsByConsumerId_Handler,
 		},
 		{
-			MethodName: "GetTransactionById",
-			Handler:    _TransactionService_GetTransactionById_Handler,
+			MethodName: "GetTransactionByContractNumber",
+			Handler:    _TransactionService_GetTransactionByContractNumber_Handler,
 		},
 		{
 			MethodName: "CreateTransaction",

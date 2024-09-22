@@ -27,6 +27,7 @@ type TransactionRepositoryUseCase interface {
 	FindAll(ctx context.Context, req any) ([]*entity.Transaction, error)
 	FindByConsumerId(ctx context.Context, consumerId uint64) ([]*entity.Transaction, error)
 	FindById(ctx context.Context, id uint64) (*entity.Transaction, error)
+	FindByContractNumber(ctx context.Context, contractNumber string) (*entity.Transaction, error)
 	Create(ctx context.Context, req *entity.Transaction) (*entity.Transaction, error)
 }
 
@@ -67,6 +68,23 @@ func (t *TransactionRepository) FindById(ctx context.Context, id uint64) (*entit
 			return nil, status.Errorf(codes.NotFound, "Transaction not found for id: %v", id)
 		}
 		log.Println("ERROR: [TransactionRepository - FindById] Internal server error:", err)
+		return nil, err
+	}
+
+	return &transaction, nil
+}
+
+func (t *TransactionRepository) FindByContractNumber(ctx context.Context, contractNumber string) (*entity.Transaction, error) {
+	ctxSpan, span := trace.StartSpan(ctx, "TransactionRepository - FindByContractNumber")
+	defer span.End()
+
+	var transaction entity.Transaction
+	if err := t.db.Debug().WithContext(ctxSpan).Where("contract_number = ?", contractNumber).First(&transaction).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Println("WARNING: [TransactionRepository - FindByContractNumber] Transaction not found for contract number:", contractNumber)
+			return nil, status.Errorf(codes.NotFound, "Transaction not found for contract number: %v", contractNumber)
+		}
+		log.Println("ERROR: [TransactionRepository - FindByContractNumber] Internal server error:", err)
 		return nil, err
 	}
 
