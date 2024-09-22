@@ -10,6 +10,7 @@ import (
 	"xyz-transaction-service/modules/transaction/service"
 	"xyz-transaction-service/pb"
 
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -58,7 +59,7 @@ func (th *TransactionHandler) GetTransactionByContractNumber(ctx context.Context
 			return &pb.TransactionResponse{
 				Code:    uint32(http.StatusNotFound),
 				Message: "Transaction not found",
-			}, status.Errorf(http.StatusNotFound, "Transaction not found")
+			}, status.Errorf(codes.NotFound, "Transaction not found")
 		}
 		parseError := commonErr.ParseError(err)
 		log.Println("ERROR: [TransactionHandler - GetTransactionByContractNumber] Error while find transaction by contract number:", parseError.Message)

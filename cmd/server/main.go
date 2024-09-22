@@ -51,6 +51,6 @@ func splash(cfg *config.Config) {
 	colorReset := "\033[0m"
 	colorCyan := "\033[36m"
 
-	fmt.Println(colorCyan, fmt.Sprintf(`-> GRPC xyz-consumer service server started on port :%s`, cfg.Port.GRPC))
+	fmt.Println(colorCyan, fmt.Sprintf(`-> GRPC %s server started on port :%s`, cfg.ServiceName, cfg.Port.GRPC))
 	fmt.Println(colorReset, "")
 }
