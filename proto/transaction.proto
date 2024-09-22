@@ -8,7 +8,7 @@ import "google/protobuf/empty.proto";
 message Transaction {
     uint64 id = 1;
     string contract_number = 2;
-    string consumer_id = 3;
+    uint64 consumer_id = 3;
     uint32 tenor = 4;
     uint64 otr = 5;
     uint64 admin_fee = 6;
