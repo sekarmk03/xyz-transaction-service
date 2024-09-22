@@ -29,6 +29,7 @@ type TransactionServiceUseCase interface {
 	FindById(ctx context.Context, id uint64) (*entity.Transaction, error)
 	FindByContractNumber(ctx context.Context, contractNumber string) (*entity.Transaction, error)
 	Create(ctx context.Context, consumerId uint64, tenor uint32, otr, adminFee, installment, interest uint64, assetName string) (*entity.Transaction, error)
+	Rollback(ctx context.Context, id uint64) error
 }
 
 func (svc *TransactionService) FindAll(ctx context.Context, req any) ([]*entity.Transaction, error) {
@@ -97,4 +98,15 @@ func (svc *TransactionService) Create(ctx context.Context, consumerId uint64, te
 	}
 
 	return res, nil
+}
+
+func (svc *TransactionService) Rollback(ctx context.Context, id uint64) error {
+	err := svc.transactionRepository.Delete(ctx, id)
+	if err != nil {
+		parseError := commonErr.ParseError(err)
+		log.Println("ERROR: [TransactionService - Rollback] Error while rollback transaction:", parseError.Message)
+		return err
+	}
+
+	return nil
 }

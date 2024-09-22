@@ -138,7 +138,16 @@ func (th *TransactionHandler) CreateTransaction(ctx context.Context, req *pb.Tra
 		parseError := commonErr.ParseError(err)
 		log.Println("ERROR: [TransactionHandler - CreateTransaction] Error while update available limit:", parseError.Message)
 
-		// should rollback transaction
+		// rollback transaction created
+		rollbackErr := th.transactionSvc.Rollback(ctx, transaction.Id)
+		if rollbackErr != nil {
+			parseError := commonErr.ParseError(rollbackErr)
+			log.Println("ERROR: [TransactionHandler - CreateTransaction] Error while rollback transaction:", parseError.Message)
+			return &pb.TransactionResponse{
+				Code:    uint32(http.StatusInternalServerError),
+				Message: parseError.Message,
+			}, status.Errorf(parseError.Code, parseError.Message)
+		}
 
 		return &pb.TransactionResponse{
 			Code:    uint32(http.StatusInternalServerError),

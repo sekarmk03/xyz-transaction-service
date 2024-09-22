@@ -29,6 +29,7 @@ type TransactionRepositoryUseCase interface {
 	FindById(ctx context.Context, id uint64) (*entity.Transaction, error)
 	FindByContractNumber(ctx context.Context, contractNumber string) (*entity.Transaction, error)
 	Create(ctx context.Context, req *entity.Transaction) (*entity.Transaction, error)
+	Delete(ctx context.Context, id uint64) error
 }
 
 func (t *TransactionRepository) FindAll(ctx context.Context, req any) ([]*entity.Transaction, error) {
@@ -106,4 +107,16 @@ func (t *TransactionRepository) Create(ctx context.Context, req *entity.Transact
 	}
 
 	return req, nil
+}
+
+func (t *TransactionRepository) Delete(ctx context.Context, id uint64) error {
+	ctxSpan, span := trace.StartSpan(ctx, "TransactionRepository - Delete")
+	defer span.End()
+
+	if err := t.db.Debug().WithContext(ctxSpan).Where("id = ?", id).Delete(&entity.Transaction{}).Error; err != nil {
+		log.Println("ERROR: [TransactionRepository - Delete] Internal server error:", err)
+		return err
+	}
+
+	return nil
 }
