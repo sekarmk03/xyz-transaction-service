@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package xyz_grpc;
+option go_package = "./;pb";
+
+message ConsumerLimit {
+    uint64 id = 1;
+    uint64 consumer_id = 2;
+    uint32 tenor = 3;
+    uint64 limit_amount = 4;
+    uint64 limit_available = 5;
+    string created_at = 6;
+    string updated_at = 7;
+}
+
+message ConsumerLimitListResponse {
+    uint32 code = 1;
+    string message = 2;
+    repeated ConsumerLimit data = 3;
+}
+
+message ConsumerRequest {
+    uint64 consumer_id = 1;
+}
+
+message ConsumerIdAndTenorRequest {
+    uint64 consumer_id = 1;
+    uint32 tenor = 2;
+}
+
+message UpdateAvailableLimitRequest {
+    uint64 consumer_id = 1;
+    uint32 tenor = 2;
+    uint64 amount_transaction = 3;
+}
+
+message ConsumerLimitResponse {
+    uint32 code = 1;
+    string message = 2;
+    ConsumerLimit data = 3;
+}
+
+service ConsumerLimitService {
+    rpc GetConsumerLimitsByConsumerId(ConsumerRequest) returns (ConsumerLimitListResponse);
+    rpc CreateConsumerLimit(ConsumerLimit) returns (ConsumerLimitResponse);
+    rpc UpdateAvailableLimit(UpdateAvailableLimitRequest) returns (ConsumerLimitResponse);
+    rpc GetConsumerLimitByConsumerIdAndTenor(ConsumerIdAndTenorRequest) returns (ConsumerLimitResponse);
+}

@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package xyz_grpc;
+option go_package = "./;pb";
+
+import "google/protobuf/empty.proto";
+
+message Transaction {
+    uint64 id = 1;
+    string contract_number = 2;
+    uint64 consumer_id = 3;
+    uint32 tenor = 4;
+    uint64 otr = 5;
+    uint64 admin_fee = 6;
+    uint64 installment = 7;
+    uint64 interest = 8;
+    string asset_name = 9;
+    string created_at = 10;
+    string updated_at = 11;
+}
+
+message TransactionListResponse {
+    uint32 code = 1;
+    string message = 2;
+    repeated Transaction data = 3;
+}
+
+message TransactionConsumerIdRequest {
+    uint64 consumer_id = 1;
+}
+
+message TransactionContractNumberRequest {
+    string contract_number = 1;
+}
+
+message TransactionResponse {
+    uint32 code = 1;
+    string message = 2;
+    Transaction data = 3;
+}
+
+service TransactionService {
+    rpc GetAllTransactions(google.protobuf.Empty) returns (TransactionListResponse);
+    rpc GetTransactionsByConsumerId(TransactionConsumerIdRequest) returns (TransactionListResponse);
+    rpc GetTransactionByContractNumber(TransactionContractNumberRequest) returns (TransactionResponse);
+    rpc CreateTransaction(Transaction) returns (TransactionResponse);
+}
