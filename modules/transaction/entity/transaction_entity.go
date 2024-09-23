@@ -23,6 +23,21 @@ type Transaction struct {
 	UpdatedAt      time.Time `json:"updated_at"`
 }
 
+func NewTransactionEntity(contractNumber string, consumerId uint64, tenor uint32, otr uint64, adminFee uint64, installment uint64, interest uint64, assetName string) *Transaction {
+	return &Transaction{
+		ContractNumber: contractNumber,
+		ConsumerId:     consumerId,
+		Tenor:          tenor,
+		Otr:            otr,
+		AdminFee:       adminFee,
+		Installment:    installment,
+		Interest:       interest,
+		AssetName:      assetName,
+		CreatedAt:      time.Now(),
+		UpdatedAt:      time.Now(),
+	}
+}
+
 func (t *Transaction) TableName() string {
 	return TransactionTableName
 }
